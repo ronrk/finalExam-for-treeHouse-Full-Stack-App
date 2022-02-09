@@ -15,6 +15,10 @@ const UserSignIn = () => {
     setUser({ ...user, ...input });
   };
 
+  if (authenticated) {
+    <Redirect to="/" />;
+  }
+
   return (
     <main>
       <div className="form--centered">
@@ -24,7 +28,6 @@ const UserSignIn = () => {
           onSubmit={(e) => {
             e.preventDefault();
             signIn(user.emailAddress, user.password);
-            history.push("/");
           }}
         >
           <label htmlFor="emailAddress">Email Adress : </label>

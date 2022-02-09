@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import axios from "axios";
 
 import { useCoursesContext } from "../store/Context";
 
 const UserSignUp = () => {
   const history = useHistory();
-  const { signUp } = useCoursesContext();
+  const { signUp, validateError } = useCoursesContext();
   const [user, setUser] = useState({});
 
   const handleInputChange = (e) => {
@@ -20,6 +19,16 @@ const UserSignUp = () => {
     <main>
       <div className="form--centered">
         <h2>Sign Up</h2>
+        {validateError && (
+          <div className="validation--errors">
+            <h3>Validation Errors</h3>
+            <ul>
+              {validateError.map((error, i) => (
+                <li key={i}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <form
           onSubmit={(e) => {

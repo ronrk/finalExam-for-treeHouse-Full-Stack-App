@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 const CoursesContext = React.createContext();
 
 export const CoursesProvider = ({ children }) => {
+  const [validateError, setValidateError] = useState(null);
   const [user, setUser] = useState(null);
   const [courses, setCourses] = useState([]);
   const [currentCourse, setCurrentCourse] = useState({});
@@ -86,26 +87,35 @@ export const CoursesProvider = ({ children }) => {
       );
       options.headers["Authorization"] = `Basic ${encodedCredentials}`;
     }
-    return fetch(url, options).catch((err) => console.log(err));
+    return fetch(url, options);
   };
 
   const signUp = async (user) => {
-    const response = await handleFetch(
-      "http://localhost:5000/api/users",
-      "POST",
-      user,
-      false,
-      null
-    );
+    try {
+      const response = await handleFetch(
+        "http://localhost:5000/api/users",
+        "POST",
+        user,
+        false,
+        null
+      );
 
-    if (response.status === 201) {
-      console.log(response, "signup");
-      signIn(user.emailAddress, user.password);
+      if (response.status === 201) {
+        console.log(response, "signup");
+        signIn(user.emailAddress, user.password);
+      }
+      if (response.status === 400) {
+        const errors = await response.json();
+        console.log(errors);
+        setValidateError(errors.errors);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
   const signIn = async (email, password) => {
-    console.log(email, password, "signin");
+    console.log("sign");
 
     const response = await handleFetch(
       "http://localhost:5000/api/users",
@@ -118,14 +128,14 @@ export const CoursesProvider = ({ children }) => {
       }
     );
     if (response.status === 200) {
+      console.log(response, "succes");
       const data = await response.json();
       setUser({ ...data, password });
       setAuthenticated(true);
-    }
-    if (response.status === 401) {
+    } else if (response.status === 401) {
+      console.log(response, "faild");
       const error = await response.json();
       setUser(null);
-      setError(error);
       setAuthenticated(false);
     }
   };
@@ -153,6 +163,7 @@ export const CoursesProvider = ({ children }) => {
         signOut,
         authenticated,
         createCourse,
+        validateError,
       }}
     >
       {children}
