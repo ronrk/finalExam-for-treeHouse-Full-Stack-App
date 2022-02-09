@@ -1,6 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-
-import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 
 const CoursesContext = React.createContext();
 
@@ -40,6 +38,18 @@ export const CoursesProvider = ({ children }) => {
     }
     setSingleLoading(false);
   };
+  const updateCourse = async (updatedCourse) => {
+    console.log(JSON.stringify(updatedCourse));
+    const { emailAddress, password } = user;
+    console.log(emailAddress, password);
+    const response = await handleFetch(
+      `http://localhost:5000/api/courses/${updatedCourse.id}`,
+      "PUT",
+      JSON.stringify(updatedCourse),
+      true,
+      { emailAddress, password }
+    );
+  };
 
   const createCourse = async (newCourse) => {
     console.log(newCourse);
@@ -56,10 +66,6 @@ export const CoursesProvider = ({ children }) => {
   useEffect(() => {
     fetchFromRestApi();
   }, []);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
 
   const handleFetch = (
     url,
@@ -82,7 +88,7 @@ export const CoursesProvider = ({ children }) => {
       );
       options.headers["Authorization"] = `Basic ${encodedCredentials}`;
     }
-    return fetch(url, options);
+    return fetch(url, options).catch((err) => console.log(err));
   };
 
   const signUp = async (user) => {
@@ -132,6 +138,7 @@ export const CoursesProvider = ({ children }) => {
     <CoursesContext.Provider
       value={{
         fetchFromRestApi,
+        updateCourse,
         signUp,
         courses,
         fetchSingleCourse,
@@ -141,7 +148,6 @@ export const CoursesProvider = ({ children }) => {
         error,
         user,
         singleLoading,
-        handleSubmit,
         signOut,
         authenticated,
         createCourse,

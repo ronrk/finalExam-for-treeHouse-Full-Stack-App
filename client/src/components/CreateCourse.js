@@ -7,7 +7,6 @@ const CreateCourse = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     const input = { [name]: value };
 
     setNewCourse({ ...newCourse, ...input });

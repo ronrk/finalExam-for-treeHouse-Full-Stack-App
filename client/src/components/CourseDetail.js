@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link, useParams } from "react-router-dom";
 import { useCoursesContext } from "../store/Context";
-import axios from "axios";
 
 const CourseDetail = () => {
   const {
     currentCourse,
     fetchSingleCourse,
     singleLoading: loading,
-    error,
+    authenticated,
+    user,
   } = useCoursesContext();
   const { id } = useParams();
-  const [course, setCourse] = useState({});
 
   useEffect(() => {
     fetchSingleCourse("http://localhost:5000/api/courses/" + id);
@@ -39,12 +38,16 @@ const CourseDetail = () => {
       <main>
         <div className="actions--bar">
           <div className="wrap">
-            <Link to={`/courses/${id}/update`} className="button">
-              Update Course
-            </Link>
-            <Link to="/" className="button">
-              Delete Course
-            </Link>
+            {authenticated && student.id === user.id && (
+              <Link to={`/courses/${id}/update`} className="button">
+                Update Course
+              </Link>
+            )}
+            {authenticated && student.id === user.id && (
+              <Link to="/" className="button">
+                Delete Course
+              </Link>
+            )}
             <Link to="/" className="button">
               Return to list
             </Link>

@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { CourseDetail, CreateCourse } from ".";
 
 import { useCoursesContext } from "../store/Context";
 
 const Courses = () => {
-  const { courses, fetchFromRestApi } = useCoursesContext();
+  const { courses } = useCoursesContext();
   let coursesList = [];
 
   if (courses) {
