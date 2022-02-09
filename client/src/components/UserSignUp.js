@@ -9,22 +9,10 @@ const UserSignUp = () => {
   const { signUp } = useCoursesContext();
   const [user, setUser] = useState({});
 
-  const createUser = async (url, data) => {
-    /*    try {
-      await axios({
-        method: "post",
-        url,
-        data: { ...data },
-      });
-    } catch (err) {
-      console.log(err.message);
-    } */
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const input = { [name]: value };
-    console.log(input);
+
     setUser({ ...user, ...input });
   };
 

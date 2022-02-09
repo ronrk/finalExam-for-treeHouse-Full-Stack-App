@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useCoursesContext } from "../store/Context";
 
 const CreateCourse = () => {
-  const { createCourse, error } = useCoursesContext();
+  const { createCourse, error, user } = useCoursesContext();
   const [newCourse, setNewCourse] = useState({});
 
   const handleInputChange = (e) => {
@@ -41,7 +41,9 @@ const CreateCourse = () => {
                 onChange={handleInputChange}
               />
 
-              <p>By Joe Smith</p>
+              <p>
+                By {user.firstName} {user.lastName}
+              </p>
 
               <label htmlFor="description">Course Description</label>
               <textarea

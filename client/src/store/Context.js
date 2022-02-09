@@ -17,7 +17,6 @@ export const CoursesProvider = ({ children }) => {
     try {
       const response = await handleFetch("http://localhost:5000/api/courses");
       const data = await response.json();
-      console.log(data);
       setCourses(data.courses);
     } catch (error) {
       setError(true);
@@ -39,9 +38,8 @@ export const CoursesProvider = ({ children }) => {
     setSingleLoading(false);
   };
   const updateCourse = async (updatedCourse) => {
-    console.log(JSON.stringify(updatedCourse));
     const { emailAddress, password } = user;
-    console.log(emailAddress, password);
+    console.log(emailAddress, password, "update");
     const response = await handleFetch(
       `http://localhost:5000/api/courses/${updatedCourse.id}`,
       "PUT",
@@ -52,15 +50,15 @@ export const CoursesProvider = ({ children }) => {
   };
 
   const createCourse = async (newCourse) => {
-    console.log(newCourse);
+    const { emailAddress, password } = user;
     const response = await handleFetch(
       "http://localhost:5000/api/courses",
       "POST",
-      { ...newCourse },
+      newCourse,
       true,
-      null
+      { emailAddress, password }
     );
-    console.log(response);
+    console.log(response, "create");
   };
 
   useEffect(() => {
@@ -92,7 +90,6 @@ export const CoursesProvider = ({ children }) => {
   };
 
   const signUp = async (user) => {
-    console.log("signUp", user);
     const response = await handleFetch(
       "http://localhost:5000/api/users",
       "POST",
@@ -100,11 +97,15 @@ export const CoursesProvider = ({ children }) => {
       false,
       null
     );
-    console.log(response);
+
+    if (response.status === 201) {
+      console.log(response, "signup");
+      signIn(user.emailAddress, user.password);
+    }
   };
 
   const signIn = async (email, password) => {
-    console.log(email, password);
+    console.log(email, password, "signin");
 
     const response = await handleFetch(
       "http://localhost:5000/api/users",
@@ -130,6 +131,7 @@ export const CoursesProvider = ({ children }) => {
   };
 
   const signOut = () => {
+    console.log("signout");
     setUser(null);
     setAuthenticated(false);
   };
