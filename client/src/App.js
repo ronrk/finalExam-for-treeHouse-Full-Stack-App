@@ -1,5 +1,10 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  useParams,
+} from "react-router-dom";
 import { useCoursesContext } from "./store/Context";
 
 import {
@@ -39,7 +44,7 @@ const App = () => {
           <Route exact path="/courses/:id">
             <CourseDetail />
           </Route>
-          <PrivateRoute exact path="/course/create">
+          <PrivateRoute path="/course/create">
             <CreateCourse />
           </PrivateRoute>
           <PrivateRoute path="/courses/:id/update">

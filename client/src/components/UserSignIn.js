@@ -16,7 +16,6 @@ const UserSignIn = () => {
   };
 
   if (authenticated) {
-    console.log(history);
     return <Redirect to="/" />;
   }
 

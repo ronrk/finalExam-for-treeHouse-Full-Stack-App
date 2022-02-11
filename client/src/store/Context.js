@@ -11,7 +11,7 @@ export const CoursesProvider = ({ children }) => {
   const [validateError, setValidateError] = useState(null);
   const [user, setUser] = useState();
   const [courses, setCourses] = useState([]);
-  const [currentCourse, setCurrentCourse] = useState({});
+  const [currentCourse, setCurrentCourse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [singleLoading, setSingleLoading] = useState(true);
