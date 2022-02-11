@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, Redirect } from "react-router-dom";
 
 import { useCoursesContext } from "../store/Context";
 
 const UserSignUp = () => {
   const history = useHistory();
-  const { signUp, validateError } = useCoursesContext();
+  const { signUp, validateError, authenticated } = useCoursesContext();
   const [user, setUser] = useState({});
 
   const handleInputChange = (e) => {
@@ -14,6 +14,10 @@ const UserSignUp = () => {
 
     setUser({ ...user, ...input });
   };
+
+  if (authenticated) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <main>

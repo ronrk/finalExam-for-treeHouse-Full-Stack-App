@@ -4,8 +4,13 @@ import { Link } from "react-router-dom";
 import { useCoursesContext } from "../store/Context";
 
 const Courses = () => {
-  const { courses } = useCoursesContext();
+  const { courses, fetchFromRestApi, cancelForm } = useCoursesContext();
   let coursesList = [];
+
+  useEffect(() => {
+    fetchFromRestApi();
+    cancelForm();
+  }, []);
 
   if (courses) {
     coursesList = courses;

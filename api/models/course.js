@@ -14,6 +14,9 @@ module.exports = (sequelize) => {
           notEmpty: {
             msg: "Please provide a value for title",
           },
+          notNull: {
+            msg: "Title cannot be empty",
+          },
         },
       },
       description: {
@@ -22,6 +25,9 @@ module.exports = (sequelize) => {
         validate: {
           notEmpty: {
             msg: "Please provide a value for description",
+          },
+          notNull: {
+            msg: "Description cannot be empty",
           },
         },
       },

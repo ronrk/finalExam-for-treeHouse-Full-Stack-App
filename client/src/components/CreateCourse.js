@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useHistory, Redirect } from "react-router-dom";
 import { useCoursesContext } from "../store/Context";
 
 const CreateCourse = () => {
-  const { createCourse, error, user } = useCoursesContext();
+  const history = useHistory();
+  const { createCourse, user, validateError } = useCoursesContext();
   const [newCourse, setNewCourse] = useState({});
+  const [success, setSuccess] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -11,24 +14,30 @@ const CreateCourse = () => {
 
     setNewCourse({ ...newCourse, ...input });
   };
+  if (success) {
+    return <Redirect to="/" />;
+  }
   return (
     <main>
       <div className="wrap">
         <h2>Create Course</h2>
-        {error && (
+        {validateError && (
           <div className="validation--errors">
             <h3>Validation Errors</h3>
             <ul>
-              <li>Please provide a value for "Title"</li>
-              <li>Please provide a value for "Description"</li>
+              {validateError.map((error, i) => (
+                <li key={i}>{error}</li>
+              ))}
             </ul>
           </div>
         )}
 
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            createCourse(newCourse);
+            const isSuccess = await createCourse(newCourse);
+
+            setSuccess(isSuccess);
           }}
         >
           <div className="main--flex">
@@ -72,7 +81,12 @@ const CreateCourse = () => {
           <button className="button" type="submit">
             Create Course
           </button>
-          <button className="button button-secondary">Cancel</button>
+          <button
+            className="button button-secondary"
+            onClick={() => history.push("/")}
+          >
+            Cancel
+          </button>
         </form>
       </div>
     </main>

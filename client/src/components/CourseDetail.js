@@ -1,22 +1,40 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import { useCoursesContext } from "../store/Context";
 
 const CourseDetail = () => {
+  //importing globalState from Context
   const {
     currentCourse,
     fetchSingleCourse,
     singleLoading: loading,
     authenticated,
     user,
+    deleteCourse,
   } = useCoursesContext();
-  const { id } = useParams();
 
+  //assigning id & history from 'react router dom'
+  const { id } = useParams();
+  const history = useHistory();
+
+  //assignin localState
+  const [onDelete, setOnDelete] = useState(false);
+  const [validation, setValidation] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  //setOnDelete to false & fetch singleCourese from api when id change
   useEffect(() => {
+    setOnDelete(false);
     fetchSingleCourse("http://localhost:5000/api/courses/" + id);
   }, [id]);
 
+  //set onDelete state when user first click on delete button
+  const onDeleteCourse = () => {
+    setOnDelete(true);
+  };
+
+  //if page is loading
   if (loading) {
     return (
       <main>
@@ -25,6 +43,7 @@ const CourseDetail = () => {
     );
   }
 
+  //when page done loading
   if (!loading) {
     const {
       title,
@@ -43,15 +62,42 @@ const CourseDetail = () => {
                 Update Course
               </Link>
             )}
+
             {authenticated && student.id === user.id && (
-              <Link to="/" className="button">
-                Delete Course
-              </Link>
+              <button
+                onClick={async () => {
+                  if (!onDelete) {
+                    onDeleteCourse();
+                    return;
+                  }
+                  if (validation.length > 1) {
+                    const isSuccess = await deleteCourse(validation, id);
+                    if (isSuccess) {
+                      history.push("/");
+                    }
+                  }
+                }}
+                className="button"
+              >
+                {onDelete ? "DELETE" : "Delete Course"}
+              </button>
             )}
             <Link to="/" className="button">
               Return to list
             </Link>
           </div>
+          {onDelete && (
+            <div>
+              <h3>are you sure you want to delete '{title}' course?</h3>
+              <label htmlFor="password">Enter Password : </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                onChange={(e) => setValidation(e.target.value)}
+              />
+            </div>
+          )}
         </div>
         <div className="wrap">
           <h2>Course Detail</h2>
@@ -71,16 +117,9 @@ const CourseDetail = () => {
 
                 <h3 className="course--detail--title">Materials Needed</h3>
                 <ul className="course--detail--list">
-                  {materialsNeeded &&
-                    materialsNeeded
-                      .trim()
-                      .split("*")
-                      .map((item, i) => {
-                        if (item.trim() === "") {
-                          return;
-                        }
-                        return <li key={i}>{item}</li>;
-                      })}
+                  {materialsNeeded && (
+                    <ReactMarkdown children={materialsNeeded} />
+                  )}
                 </ul>
               </div>
             </div>
@@ -89,23 +128,6 @@ const CourseDetail = () => {
       </main>
     );
   }
-
-  /*  
-              <h3 className="course--detail--title">Materials Needed</h3>
-              <ul className="course--detail--list">
-                {currentCourse.materialsNeeded
-                  .trim()
-                  .split("*")
-                  .map((item, i) => (
-                    <li key={i}>{item}</li>
-                  ))}
-              </ul>
-            </div>
-          </div>
-        </form>
-      </div>
-    </main>
-  ); */
 };
 
 export default CourseDetail;

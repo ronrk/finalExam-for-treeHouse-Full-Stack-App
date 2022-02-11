@@ -5,7 +5,7 @@ import { useCoursesContext } from "../store/Context";
 
 const UserSignIn = () => {
   const history = useHistory();
-  const { signIn, authenticated } = useCoursesContext();
+  const { signIn, authenticated, validateError } = useCoursesContext();
 
   const [user, setUser] = useState({ emailAddress: "", password: "" });
 
@@ -16,14 +16,22 @@ const UserSignIn = () => {
   };
 
   if (authenticated) {
-    <Redirect to="/" />;
+    console.log(history);
+    return <Redirect to="/" />;
   }
 
   return (
     <main>
       <div className="form--centered">
         <h2>Sign In</h2>
-
+        {validateError && (
+          <div className="validation--errors">
+            <h3>Validation Errors</h3>
+            <ul>
+              <li>wrong email address / password</li>
+            </ul>
+          </div>
+        )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
