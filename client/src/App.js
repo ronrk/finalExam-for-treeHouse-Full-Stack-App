@@ -18,6 +18,7 @@ import {
   UserSignIn,
   NotFound,
   UnhandledError,
+  UserSignOut,
 } from "./components";
 
 import "./App.css";
@@ -49,6 +50,9 @@ const App = () => {
           </PrivateRoute>
           <PrivateRoute path="/courses/:id/update">
             <UpdateCourse />
+          </PrivateRoute>
+          <PrivateRoute path="/signout">
+            <UserSignOut />
           </PrivateRoute>
           <Route>
             <NotFound />

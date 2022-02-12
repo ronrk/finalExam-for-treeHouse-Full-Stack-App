@@ -17,9 +17,7 @@ const Header = () => {
                 Welcome, {user.firstName} {user.lastName}
               </li>
               <li></li>
-              <NavLink to="/" onClick={signOut}>
-                Sign Out
-              </NavLink>
+              <NavLink to="/signout">Sign Out</NavLink>
             </ul>
           ) : (
             <ul className="header--signedout">

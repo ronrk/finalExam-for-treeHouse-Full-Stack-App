@@ -9,6 +9,7 @@ import UserSignUp from "./UserSignUp";
 import NotFound from "./NotFound";
 import Forbidden from "./Forbidden";
 import UnhandledError from "./UnhandledError";
+import UserSignOut from "./UserSignOut";
 
 export {
   Courses,
@@ -22,4 +23,5 @@ export {
   PrivateRoute,
   NotFound,
   UnhandledError,
+  UserSignOut,
 };
